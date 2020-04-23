@@ -34,7 +34,7 @@ def max_pool_2x2(x):
   return tf.nn.max_pool2d(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
 def neturalTest():
-  mnist = input_data.read_data_sets("data/", one_hot=True)
+  mnist = input_data.read_data_sets(".\data", one_hot=True)
   x = tf.compat.v1.placeholder("float", [None, 784])
   y_ = tf.compat.v1.placeholder("float", [None,10])
   W_conv1 = weight_variable([5, 5, 1, 32])

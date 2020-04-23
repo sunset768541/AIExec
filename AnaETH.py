@@ -47,33 +47,38 @@ def analsys1():
     print("全年2天振幅大于5的天数为:"+str(a))
     print("占比为:" + str(a / len(data)*100)+"%")
 
-
-def analsys2():
-    a = 0
-    zf  = 5 #振幅
-    befowday = 2 #计算前3天内振幅大于5
+#分析数据在指定踢啊内的波动大小
+def analsys2(fluctuation , days):
+    changecount = 0
+    positive = 0
+    negitive = 0
+    if fluctuation <0 | days <= 0:
+        print("输入参数错误，")
+        return
     for count in range(0,len(data)):
         day = data[count]
         t = datetime.fromtimestamp(int(day[0])/1000, pytz.timezone('Asia/Shanghai')).strftime(
             '%Y-%m-%d')
-        if count >= befowday:
-            zhenfu = abs((float(day[4]) - float(data[count-befowday][1]))/float(data[count-befowday][1])*100)
+        if count >= days:
+            change = ((float(day[4]) - float(data[count-days][1]))/float(data[count-days][1]))*100
         # print("开盘价:"+str(day[1]))
         # print("收盘价:"+str(day[4]))
         #     print("2天振幅："+str(zhenfu)+"%")
-            if(zhenfu > zf):
-                a = a+1
-                print("当前时间:"+t)
-                tb = datetime.fromtimestamp(int(data[count - befowday][0]) / 1000, pytz.timezone('Asia/Shanghai')).strftime(
-                    '%Y-%m-%d')
-                print(tb)
+            if(abs(change) > fluctuation):
+                changecount = changecount+1
+                if (change > 0):
+                    positive = positive+1
+                else:
+                    negitive = negitive+1
 
-    print("全年%d天振幅大于%d的天数为:"%(befowday+1,zf)+str(a))
-    print("占比为:" + str(a / len(data)*100)+"%")
+
+    print("全年%d天振幅大于%d的天数为:"%(days+1,fluctuation)+str(changecount))
+    print("增长为:"+str(positive)+"占比为:"+str(float(positive/changecount)))
+    print("降低为:"+str(negitive)+"占比为:"+str(float(negitive/changecount)))
+    print("占比为:" + str(changecount / len(data)*100)+"%")
 
 
 
 if __name__ == '__main__':
     analsys()
-    analsys1()
-    analsys2()
+    analsys2(6,10)
