@@ -4,6 +4,11 @@ import pytz
 import time
 import math
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+
+plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
 ###
 #外网访问币安API获取ETH/USDT的K线数据 间隔为1天
 #curl https://api.binance.com/api/v3/klines?symbol=ETHUSDT\&interval=1d >> keline.txt
@@ -78,7 +83,38 @@ def analsys2(fluctuation , days):
     print("占比为:" + str(changecount / len(data)*100)+"%")
 
 
+#分析数据在指定踢啊内的波动大小
+def analsys3():
+    lows = []
+    highs=[]
+    #计算最低与最高价之差的
+    for count in range(0,len(data)):
+        day = data[count]
+        open = float(day[1])
+        high = float(day[2])
+        low = float(day[3])
+        lows.append(low - open)
+        highs.append(high-open)
+        # print("开盘价:"+str(day[1]))
+        # print("最高价:"+str(day[2]))
+        # print("最低价:"+str(day[3]))
+        # print("收盘价:"+str(day[4]))
+    print(len(lows))
+    print(len(highs))
+    x = np.linspace(0, len(data), len(data))
+    plt.figure()  # 定义一个图像窗口
+    # plt.plot(x, lows)  # 绘制曲线 y1
+    # plt.plot(x, highs)  # 绘制曲线 y2
+    # plt.show()
+    plt.hist(lows, bins=50, normed=1, facecolor="blue", edgecolor="black", alpha=0.7)
+    plt.hist(highs, bins=50, normed=1, facecolor="red", edgecolor="black", alpha=0.7)
+    # 显示横轴标签
+    plt.xlabel("区间")
+    # 显示纵轴标签
+    plt.ylabel("频率")
+    # 显示图标题
+    plt.title("ETH最低最高与开盘价格频率分布直方图")
+    plt.show()
 
 if __name__ == '__main__':
-    analsys()
-    analsys2(6,10)
+    analsys3()
